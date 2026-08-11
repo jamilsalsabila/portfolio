@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M. Salsabila Jamil — Character Select</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0D1B2A;
+    --panel: #16283B;
+    --panel-edge: #24405A;
+    --teal: #00C9A7;
+    --gold: #FFD166;
+    --blue: #4FB6FF;
+    --text: #E8F4F8;
+    --muted: #7E97AC;
+    --danger: #FF6B6B;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(circle at 15% 10%, rgba(0,201,167,0.10), transparent 40%),
+      radial-gradient(circle at 85% 90%, rgba(79,182,255,0.08), transparent 45%),
+      var(--bg);
+    color:var(--text);
+    font-family:'Space Mono', monospace;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:32px 16px;
+  }
+  .pixel{ font-family:'Press Start 2P', monospace; }
+
+  .cabinet{
+    width:100%;
+    max-width:820px;
+    background:var(--panel);
+    border:3px solid var(--panel-edge);
+    box-shadow:
+      0 0 0 6px var(--bg),
+      0 0 0 9px var(--panel-edge),
+      0 24px 60px rgba(0,0,0,0.5);
+    padding:28px 26px 22px;
+    position:relative;
+  }
+  .cabinet::before{
+    content:"";
+    position:absolute; inset:0;
+    background:repeating-linear-gradient(
+      to bottom, rgba(255,255,255,0.025) 0px, rgba(255,255,255,0.025) 1px,
+      transparent 1px, transparent 3px
+    );
+    pointer-events:none;
+  }
+
+  .topbar{
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:22px; flex-wrap:wrap; gap:10px;
+  }
+  .topbar .label{ font-size:9px; color:var(--muted); letter-spacing:1px; }
+  .coins{ font-size:11px; color:var(--gold); }
+  .coins b{ margin-left:6px; }
+
+  .header{
+    display:flex; gap:20px; align-items:center;
+    margin-bottom:26px; flex-wrap:wrap;
+  }
+  .avatar{
+    width:88px; height:88px;
+    background:linear-gradient(145deg, #1E3A5F, #10202f);
+    border:3px solid var(--teal);
+    display:flex; align-items:center; justify-content:center;
+    font-size:26px; color:var(--teal);
+    flex-shrink:0;
+    overflow:hidden;
+  }
+  .avatar img{
+    width:100%; height:100%; object-fit:cover;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+  }
+  .id-block{ flex:1; min-width:220px; }
+  .id-block h1{ font-size:15px; margin:0 0 8px; letter-spacing:1px; }
+  .id-block .class{ font-size:9px; color:var(--gold); margin-bottom:10px; }
+  .contact-row{ display:flex; gap:8px; flex-wrap:wrap; margin-top:6px; }
+  .contact-pill{
+    font-size:9.5px;
+    color:var(--text);
+    background:#0D1B2A;
+    border:1px solid var(--panel-edge);
+    padding:6px 10px;
+    text-decoration:none;
+    transition:border-color .15s ease, color .15s ease;
+  }
+  .contact-pill:hover{ border-color:var(--teal); color:var(--teal); }
+
+  .quick-summary{
+    font-size:10.5px;
+    color:var(--text);
+    background:#0D1B2A;
+    border-left:3px solid var(--teal);
+    padding:10px 14px;
+    margin-bottom:18px;
+    line-height:1.7;
+  }
+
+  .tabs{
+    display:flex; gap:8px; margin-bottom:20px; flex-wrap:wrap;
+  }
+  .tab{
+    font-family:'Press Start 2P', monospace;
+    font-size:9px;
+    background:#0D1B2A;
+    border:2px solid var(--panel-edge);
+    color:var(--muted);
+    padding:11px 10px;
+    cursor:pointer;
+    flex:1;
+    min-width:110px;
+    text-align:center;
+    transition:transform .08s ease, border-color .15s ease, color .15s ease;
+  }
+  .tab:hover{ color:var(--text); border-color:var(--blue); }
+  .tab.active{
+    color:var(--bg);
+    background:var(--teal);
+    border-color:var(--teal);
+  }
+  .tab:active{ transform:translateY(2px); }
+
+  .panel{
+    background:#0D1B2A;
+    border:2px solid var(--panel-edge);
+    min-height:280px;
+    padding:22px;
+    position:relative;
+    overflow:hidden;
+  }
+  .screen{ display:none; animation:reveal .35s steps(6) both; }
+  .screen.active{ display:block; }
+  @keyframes reveal{
+    from{ clip-path: inset(0 100% 0 0); }
+    to{ clip-path: inset(0 0 0 0); }
+  }
+
+  .screen h2{ font-size:11px; color:var(--gold); margin:0 0 14px; letter-spacing:1px; }
+  .screen p{ font-size:12.5px; line-height:1.9; color:var(--text); margin:0 0 14px; }
+  .screen p b{ color:var(--teal); }
+
+  .stat{ margin-bottom:16px; }
+  .stat-top{ display:flex; justify-content:space-between; font-size:10px; margin-bottom:6px; }
+  .stat-top span:first-child{ color:var(--text); }
+  .stat-top span:last-child{ color:var(--teal); }
+  .bar{ height:12px; background:#132436; border:1px solid var(--panel-edge); }
+  .bar > i{ display:block; height:100%; background:linear-gradient(90deg, var(--teal), #6FE3CB); width:0; transition:width 1s ease; }
+
+  .quest{
+    border-left:3px solid var(--teal);
+    padding:8px 0 8px 14px;
+    margin-bottom:14px;
+  }
+  .quest.inactive{ border-color:var(--panel-edge); opacity:.6; }
+  .quest-top{ display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; }
+  .quest-top b{ font-size:11px; }
+  .quest-top .tag{ font-size:8px; background:var(--teal); color:var(--bg); padding:3px 6px; height:fit-content; }
+  .quest-top .tag.ongoing{ background:var(--gold); }
+  .quest .meta{ font-size:10px; color:var(--muted); margin:4px 0 6px; }
+  .quest ul{ margin:0; padding-left:16px; font-size:11px; color:var(--text); line-height:1.8; }
+
+  .achv-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:12px; }
+  .achv{
+    background:#132436; border:2px solid var(--panel-edge);
+    padding:14px; text-align:center; cursor:pointer;
+    transition:border-color .15s ease, transform .1s ease;
+  }
+  .achv:not(.static):hover{ border-color:var(--gold); transform:translateY(-2px); }
+  .achv.static{ cursor:default; }
+  .achv .ic{ font-size:22px; margin-bottom:8px; }
+  .achv .t{ font-size:9px; color:var(--gold); margin-bottom:6px; line-height:1.5; }
+  .achv .d{ font-size:9.5px; color:var(--muted); line-height:1.6; }
+
+  .hint{
+    margin-top:14px; font-size:9px; color:var(--muted); text-align:center;
+  }
+  .blink{ animation:blink 1.4s steps(2) infinite; }
+  @keyframes blink{ 50%{ opacity:0; } }
+
+  @media (max-width:480px){
+    .id-block h1{ font-size:13px; }
+    .tab{ font-size:8px; padding:9px 6px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cabinet">
+  <div class="topbar">
+    <span class="pixel label">TENTANG SAYA // PLAYER FILE</span>
+    <span class="coins pixel">DIJELAJAHI <b id="coinCount">1</b>/4</span>
+  </div>
+
+  <div class="header">
+    <div class="avatar"><img src="data:image/png;base64,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" alt="M. Salsabila Jamil"></div>
+    <div class="id-block">
+      <h1 class="pixel">M. SALSABILA JAMIL</h1>
+      <div class="class pixel">CLASS: WEB DEVELOPER</div>
+      <div class="contact-row">
+        <a class="contact-pill" href="mailto:jamilsalsabila@gmail.com">✉ Email</a>
+        <a class="contact-pill" href="https://wa.me/6282320151391" target="_blank" rel="noopener">💬 WhatsApp</a>
+        <a class="contact-pill" href="https://www.linkedin.com/in/jamilsalsabila/" target="_blank" rel="noopener">🔗 LinkedIn</a>
+        <a class="contact-pill" href="https://www.github.com/jamilsalsabila" target="_blank" rel="noopener">🐙 GitHub</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="quick-summary">S1 Informatika (IPK 3,41) &nbsp;·&nbsp; Laravel &amp; PHP 8 &nbsp;·&nbsp; IT Staff / Web Developer &nbsp;·&nbsp; Kota Semarang</div>
+
+  <div class="tabs">
+    <div class="tab pixel active" data-tab="about">ABOUT</div>
+    <div class="tab pixel" data-tab="skills">SKILLS</div>
+    <div class="tab pixel" data-tab="quests">QUEST LOG</div>
+    <div class="tab pixel" data-tab="achv">ACHIEVEMENTS</div>
+  </div>
+
+  <div class="panel">
+    <div class="screen active" id="screen-about">
+      <h2 class="pixel">// PLAYER BIO</h2>
+      <p>Lulusan <b>S1 Informatika, Universitas Syiah Kuala</b> (IPK 3,41) dengan minat kuat pada pengembangan web dan pemecahan masalah lewat kode.</p>
+      <p>Saat ini fokus membangun aplikasi web dengan <b>Laravel & PHP 8</b>, sambil terus menjelajahi dunia AI dan teknologi baru. Cepat beradaptasi dan senang menyelesaikan masalah lewat kode.</p>
+    </div>
+
+    <div class="screen" id="screen-skills">
+      <h2 class="pixel">// SKILL TREE</h2>
+      <div class="stat" data-lvl="9"><div class="stat-top"><span>Laravel</span><span>LV 9</span></div><div class="bar"><i></i></div></div>
+      <div class="stat" data-lvl="9"><div class="stat-top"><span>PHP 8</span><span>LV 9</span></div><div class="bar"><i></i></div></div>
+      <div class="stat" data-lvl="7"><div class="stat-top"><span>Git / GitHub</span><span>LV 7</span></div><div class="bar"><i></i></div></div>
+      <div class="stat" data-lvl="8"><div class="stat-top"><span>HTML & CSS</span><span>LV 8</span></div><div class="bar"><i></i></div></div>
+      <div class="stat" data-lvl="6"><div class="stat-top"><span>Canva / Desain</span><span>LV 6</span></div><div class="bar"><i></i></div></div>
+    </div>
+
+    <div class="screen" id="screen-quests">
+      <h2 class="pixel">// QUEST LOG</h2>
+      <div class="quest">
+        <div class="quest-top"><b>IT Staff & HR — Cotch Café</b><span class="tag ongoing pixel">ONGOING</span></div>
+        <div class="meta">Des 2025 – Sekarang · Kota Bandung</div>
+        <ul>
+          <li>Kelola infrastruktur IT & bangun tools digital internal</li>
+          <li>Buat formulir digital via Fillout & AirTable</li>
+        </ul>
+      </div>
+      <div class="quest">
+        <div class="quest-top"><b>Web Developer — Magang, PT Netkrom Solusindo</b><span class="tag pixel">CLEARED</span></div>
+        <div class="meta">Okt 2025 (20 hari) · Kota Bandung</div>
+        <ul><li>Mengembangkan aplikasi web dalam program magang</li></ul>
+      </div>
+    </div>
+
+    <div class="screen" id="screen-achv">
+      <h2 class="pixel">// ACHIEVEMENTS UNLOCKED</h2>
+      <div class="achv-grid">
+        <div class="achv static"><div class="ic">🎓</div><div class="t pixel">S1 INFORMATIKA</div><div class="d">IPK 3,41 · Univ. Syiah Kuala</div></div>
+        <div class="achv" data-url="https://math-blitz-game.vercel.app"><div class="ic">🕹️</div><div class="t pixel">GAME BUILDER</div><div class="d">Math Blitz — klik untuk coba langsung ▶</div></div>
+        <div class="achv" data-url="https://github.com/jamilsalsabila"><div class="ic">🚀</div><div class="t pixel">6 PROYEK LIVE</div><div class="d">Klik untuk buka GitHub ▶</div></div>
+        <div class="achv static"><div class="ic">📡</div><div class="t pixel">BBPVP BANDUNG</div><div class="d">Pelatihan Sistem Informasi Pariwisata Web</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hint pixel">KLIK MENU, ATAU TEKAN [TAB] DI KEYBOARD <span class="blink">▮</span></div>
+</div>
+
+<script>
+  const tabs = Array.from(document.querySelectorAll('.tab'));
+  const screens = document.querySelectorAll('.screen');
+  const coinCount = document.getElementById('coinCount');
+  const visited = new Set(['about']); // first screen starts already "explored"
+
+  function animateBars(){
+    document.querySelectorAll('#screen-skills .stat').forEach(s=>{
+      const lvl = parseInt(s.dataset.lvl,10);
+      s.querySelector('.bar > i').style.width = (lvl*10)+'%';
+    });
+  }
+
+  function openTab(tabEl){
+    tabs.forEach(t=>t.classList.remove('active'));
+    screens.forEach(s=>s.classList.remove('active'));
+    tabEl.classList.add('active');
+    document.getElementById('screen-'+tabEl.dataset.tab).classList.add('active');
+    if(tabEl.dataset.tab==='skills'){ setTimeout(animateBars, 60); }
+    visited.add(tabEl.dataset.tab);
+    coinCount.textContent = visited.size;
+  }
+
+  tabs.forEach(tab=>{
+    tab.addEventListener('click', ()=> openTab(tab));
+  });
+
+  // Easter egg: the hint says press [TAB] — actually make it work.
+  document.addEventListener('keydown', (e)=>{
+    if(e.key === 'Tab'){
+      e.preventDefault();
+      const current = tabs.findIndex(t=>t.classList.contains('active'));
+      const next = tabs[(current+1) % tabs.length];
+      openTab(next);
+    }
+  });
+
+  // Achievement cards with a data-url open the real project link.
+  document.querySelectorAll('.achv[data-url]').forEach(card=>{
+    card.addEventListener('click', ()=>{
+      window.open(card.dataset.url, '_blank', 'noopener');
+    });
+  });
+</script>
+
+</body>
+</html>
